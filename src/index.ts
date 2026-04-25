@@ -98,7 +98,7 @@ function createMcpServer(env: Env): McpServer {
 
                 const articleHtml = await page.$eval(
                     "article",
-                    (article) => article.outerHtml,
+                    (article) => article.outerHTML,
                 );
 
                 if (!articleHtml)
