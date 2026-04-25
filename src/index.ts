@@ -93,9 +93,8 @@ function createMcpServer(env: Env): McpServer {
                 const page = await browser.newPage();
                 const url = `${BASE_URL}${path.startsWith("/") ? path : "/" + path}`;
 
-                await page.goto(url, {
-                    waitUntil: "networkidle0",
-                });
+                await page.goto(url);
+                await page.waitForSelector("article");
 
                 const articleHtml = await page.$eval(
                     "article",
