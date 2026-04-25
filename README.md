@@ -22,8 +22,8 @@ Because `m3.material.io` is a JavaScript-heavy SPA, the worker uses Puppeteer to
 - [Node.js](https://nodejs.org/) 18+
 - [pnpm](https://pnpm.io/)
 - A [Cloudflare](https://dash.cloudflare.com/) account with:
-  - **Browser Run** enabled
-  - **Workers AI** enabled
+    - **Browser Run** enabled
+    - **Workers AI** enabled
 
 ## Setup
 

@@ -6,10 +6,10 @@
     "compatibility_flags": ["nodejs_compat"],
     "browser": {
         "binding": "BROWSER",
-        "remote": true
+        "remote": true,
     },
     "ai": {
         "binding": "AI",
-        "remote": true
+        "remote": true,
     },
 }

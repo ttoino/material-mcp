@@ -60,5 +60,7 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Generate cloudflare types
+        run: pnpm run gen:cf-types
       - name: Typecheck
         run: pnpm run check
