@@ -1,15 +1,13 @@
-import type { ToolCallback } from "@modelcontextprotocol/server";
-
 import { BASE_URL } from "./constants";
-import { handle, text } from "./util";
+import { catch_, MMError } from "./error";
 
-export const listSections: ToolCallback = async () =>
-    await handle(async () => {
+export const listSections = async () => {
+    try {
         const res = await fetch(`${BASE_URL}/sitemap.xml`);
         if (!res.ok)
-            return text(
+            throw new MMError(
+                500,
                 `Failed to fetch sitemap: ${res.status} ${res.statusText}`,
-                true,
             );
 
         const xml = await res.text();
@@ -25,7 +23,8 @@ export const listSections: ToolCallback = async () =>
         }
 
         const sections = Array.from(paths).sort();
-        return text(
-            sections.length > 0 ? sections.join("\n") : "No sections found.",
-        );
-    });
+        return sections.length > 0 ? sections.join("\n") : "No sections found.";
+    } catch (err) {
+        return catch_(err, "Error listing sections");
+    }
+};
