@@ -4,7 +4,7 @@ import { cors } from "hono/cors";
 import z from "zod";
 
 import { MMError } from "./error";
-import { getPage, GetPageSchema } from "./get-page";
+import { getPage, getPageHTML, GetPageSchema } from "./get-page";
 import { listPages } from "./list-pages";
 import { mcp } from "./mcp";
 
@@ -58,3 +58,4 @@ const handle =
 
 app.get("/pages", handle(listPages));
 app.get("/page", handle(getPage, GetPageSchema));
+app.get("/page-html", handle(getPageHTML, GetPageSchema));

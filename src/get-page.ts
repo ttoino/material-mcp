@@ -1,4 +1,4 @@
-import puppeteer from "@cloudflare/puppeteer";
+import { type ElementHandle, launch, type Page } from "@cloudflare/playwright";
 import { env } from "cloudflare:workers";
 import z from "zod";
 
@@ -14,8 +14,77 @@ export const GetPageSchema = z.object({
 });
 export type GetPageSchema = z.infer<typeof GetPageSchema>;
 
+type Handle = ElementHandle<HTMLElement | SVGElement>;
+
+const replaceSpecTable = async (page: Page, table: Handle) => {
+    let result = "<div>";
+
+    const processToken = async (token: Handle) => {
+        const titleElement = await token.$(".display-name");
+        const title = await titleElement?.evaluate((el) => el.textContent);
+
+        const valueElement = await token.$(".token-value-container");
+        await valueElement?.click();
+        const resolvedValueElement = await page.$(
+            "token-value-resolutions-item .resolution-text",
+        );
+        const value = await resolvedValueElement?.evaluate(
+            (el) => el.textContent,
+        );
+
+        result += `<li>${title}: ${value}</li>`;
+
+        const closeButton = await page.$("button[aria-label='Close dialog']");
+        await closeButton?.click();
+    };
+
+    const processTokenList = async (group: Handle) => {
+        result += "<ul>";
+
+        const list = await group.$("token-list");
+        const tokens = await list?.$$("token");
+        for (const token of tokens ?? []) await processToken(token);
+
+        result += "</ul>";
+    };
+
+    const expandButton = await table.$(
+        "button[aria-label='Toggle expand all']",
+    );
+    await expandButton?.click();
+
+    const dropdownButton = await table.$(
+        "button[aria-label='Token set selector']",
+    );
+    await dropdownButton?.click();
+
+    const sets = await page.$$(".token-set-option");
+    for (const set of sets) {
+        const title = await set.evaluate((set) => set.textContent);
+        result += `<h3>${title}</h3>`;
+
+        await set.click();
+
+        await processTokenList(table);
+
+        const groups = await table.$$("display-group-item");
+        for (const group of groups) {
+            const nameEl = await group.$(".group-name");
+            const title = await nameEl?.evaluate((el) => el.textContent);
+            result += `<h4>${title}</h4>`;
+
+            await processTokenList(group);
+        }
+
+        await dropdownButton?.click();
+    }
+
+    result += "</div>";
+    await table.evaluate((table, result) => (table.outerHTML = result), result);
+};
+
 export const getPageHTML = async ({ path }: GetPageSchema) => {
-    const browser = await puppeteer.launch(env.BROWSER);
+    const browser = await launch(env.BROWSER);
 
     try {
         const page = await browser.newPage();
@@ -24,11 +93,32 @@ export const getPageHTML = async ({ path }: GetPageSchema) => {
         await page.goto(url);
         await page.waitForSelector("article");
 
-        await page.$$eval(".copy-button-container", (buttons) =>
-            buttons.forEach((button) => button.remove()),
+        // Remove copy buttons and icons
+        await page.$$eval(
+            ".copy-button-container, .google-symbols",
+            (buttons) => buttons.forEach((button) => button.remove()),
         );
 
-        const articleHTML: string = await page.$eval(
+        // Replace videos with dummy images
+        await page.$$eval("video", (videos) =>
+            videos.forEach((video) => {
+                const src = video.querySelector("source")?.src;
+                const alt = video.ariaLabel;
+
+                if (src && alt) {
+                    const img = document.createElement("img");
+                    img.src = src;
+                    img.alt = alt;
+                    video.replaceWith(img);
+                }
+            }),
+        );
+
+        // Replace interactive specs table with content
+        const specTables = await page.$$("token-viewer");
+        for (const table of specTables) await replaceSpecTable(page, table);
+
+        const articleHTML = await page.$eval(
             "article",
             (article) => article.outerHTML,
         );
