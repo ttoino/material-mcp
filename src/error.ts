@@ -4,7 +4,11 @@ export class MMError extends Error {
     readonly message: string;
     readonly status: ContentfulStatusCode;
 
-    constructor(status: ContentfulStatusCode, message: string, options?: ErrorOptions) {
+    constructor(
+        status: ContentfulStatusCode,
+        message: string,
+        options?: ErrorOptions,
+    ) {
         super(message, options);
         this.message = message;
         this.status = status;
