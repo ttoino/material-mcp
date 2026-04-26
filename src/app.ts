@@ -5,7 +5,7 @@ import z from "zod";
 
 import { MMError } from "./error";
 import { getPage, GetPageSchema } from "./get-page";
-import { listSections } from "./list-sections";
+import { listPages } from "./list-pages";
 import { mcp } from "./mcp";
 
 export const app = new Hono();
@@ -56,5 +56,5 @@ const handle =
         }
     };
 
-app.get("/pages", handle(listSections));
+app.get("/pages", handle(listPages));
 app.get("/page", handle(getPage, GetPageSchema));

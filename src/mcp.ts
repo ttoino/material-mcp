@@ -1,7 +1,7 @@
 import { CallToolResult, McpServer } from "@modelcontextprotocol/server";
 
 import { getPage, GetPageSchema } from "./get-page";
-import { listSections } from "./list-sections";
+import { listPages } from "./list-pages";
 
 export const mcp = new McpServer({
     name: "material-design-mcp",
@@ -36,12 +36,12 @@ const handle =
     };
 
 mcp.registerTool(
-    "list_sections",
+    "list_pages",
     {
         description:
-            "List the top-level documentation sections available on the Material Design 3 website (m3.material.io).",
+            "List all documentation pages available on the Material Design 3 website (m3.material.io).",
     },
-    handle(listSections),
+    handle(listPages),
 );
 
 mcp.registerTool(
