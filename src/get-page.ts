@@ -2,6 +2,7 @@ import { type ElementHandle, launch, type Page } from "@cloudflare/playwright";
 import { env } from "cloudflare:workers";
 import z from "zod";
 
+import { getCached, setCached } from "./cache";
 import { BASE_URL } from "./constants";
 import { catch_, MMError } from "./error";
 
@@ -84,6 +85,10 @@ const replaceSpecTable = async (page: Page, table: Handle) => {
 };
 
 export const getPageHTML = async ({ path }: GetPageSchema) => {
+    const cacheKey = `html:${path}`;
+    const cached = await getCached(cacheKey);
+    if (cached) return cached;
+
     const browser = await launch(env.BROWSER);
 
     try {
@@ -123,6 +128,8 @@ export const getPageHTML = async ({ path }: GetPageSchema) => {
             (article) => article.outerHTML,
         );
 
+        await setCached(cacheKey, articleHTML);
+
         return articleHTML;
     } catch (err) {
         return catch_(err, "Error getting page HTML");
@@ -132,6 +139,10 @@ export const getPageHTML = async ({ path }: GetPageSchema) => {
 };
 
 export const getPage = async ({ path }: GetPageSchema) => {
+    const cacheKey = `md:${path}`;
+    const cached = await getCached(cacheKey);
+    if (cached) return cached;
+
     try {
         const articleHTML = await getPageHTML({ path });
 
@@ -147,6 +158,8 @@ export const getPage = async ({ path }: GetPageSchema) => {
                 500,
                 `Markdown conversion failed: ${result.error}`,
             );
+
+        await setCached(cacheKey, result.data);
 
         return result.data;
     } catch (err) {
