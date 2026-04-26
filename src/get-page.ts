@@ -26,6 +26,10 @@ export const getPage: ToolCallback<typeof GetPageSchema> = async ({ path }) => {
             await page.goto(url);
             await page.waitForSelector("article");
 
+            await page.$$eval(".copy-button-container", (buttons) =>
+                buttons.forEach((button) => button.remove()),
+            );
+
             const articleHtml = await page.$eval(
                 "article",
                 (article) => article.outerHTML,
