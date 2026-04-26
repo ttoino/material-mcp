@@ -4,18 +4,18 @@ A Cloudflare Worker that exposes an [MCP (Model Context Protocol)](https://model
 
 ## Features
 
-- **`list_sections`** — Discover top-level documentation sections (Foundations, Components, Styles, etc.)
+- **`list_pages`** — List all documentation pages from the Material Design sitemap
 - **`get_page`** — Navigate any Material Design page and get its content as clean Markdown
 
 ## Architecture
 
 - **Runtime**: Cloudflare Workers (TypeScript, `nodejs_compat`)
 - **Router**: [Hono](https://hono.dev/)
-- **Browser automation**: [Browser Run](https://developers.cloudflare.com/browser-run/) (Puppeteer binding)
+- **Browser automation**: [Browser Run](https://developers.cloudflare.com/browser-run/) (Playwright binding)
 - **Markdown conversion**: [Workers AI](https://developers.cloudflare.com/workers-ai/) `toMarkdown()`
 - **MCP transport**: Streamable HTTP (`@modelcontextprotocol/server` v2)
 
-Because `m3.material.io` is a JavaScript-heavy SPA, the worker uses Puppeteer to wait for the client-side `<article>` element to render before extracting content.
+Because `m3.material.io` is a JavaScript-heavy SPA, the worker uses Playwright to wait for the client-side `<article>` element to render before extracting content.
 
 ## Prerequisites
 
@@ -52,9 +52,9 @@ pnpm deploy
 
 ## MCP Tools
 
-### `list_sections`
+### `list_pages`
 
-Returns the top-level documentation sections from the Material Design sitemap.
+Returns all documentation page paths from the Material Design sitemap.
 
 **Input:** none
 
