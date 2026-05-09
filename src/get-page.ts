@@ -98,6 +98,13 @@ export const getPageHTML = async ({ path }: GetPageSchema) => {
         await page.goto(url);
         await page.waitForSelector("article");
 
+        // Load all images
+        const images = await page.$$("mio-image");
+        for (const image of images) {
+            await image.scrollIntoViewIfNeeded();
+            await image.waitForSelector("img:not(.blur-image):not(.image-loading)")
+        }
+
         // Remove copy buttons and icons
         await page.$$eval(
             ".copy-button-container, .google-symbols",
