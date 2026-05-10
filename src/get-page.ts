@@ -92,7 +92,9 @@ export const getPageHTML = async ({ path }: GetPageSchema) => {
     const browser = await launch(env.BROWSER);
 
     try {
-        const page = await browser.newPage();
+        const page = await browser.newPage({
+            viewport: { height: 1080, width: 1920 },
+        });
         const url = `${BASE_URL}${path.startsWith("/") ? path : "/" + path}`;
 
         await page.goto(url);
@@ -102,7 +104,9 @@ export const getPageHTML = async ({ path }: GetPageSchema) => {
         const images = await page.$$("mio-image");
         for (const image of images) {
             await image.scrollIntoViewIfNeeded();
-            await image.waitForSelector("img:not(.blur-image):not(.image-loading)")
+            await image.waitForSelector(
+                "img:not(.blur-image):not(.image-loading)",
+            );
         }
 
         // Remove copy buttons and icons
