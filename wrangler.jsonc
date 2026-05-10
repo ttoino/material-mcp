@@ -18,4 +18,9 @@
             "id": "828361e90e2c4d0f8bd5be646ab449e4",
         },
     ],
+    "workers_dev": true,
+    "preview_urls": true,
+    "observability": {
+        "enabled": true,
+    },
 }
