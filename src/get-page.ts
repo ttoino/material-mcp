@@ -21,17 +21,15 @@ const replaceSpecTable = async (page: Page, table: Handle) => {
     let result = "<div>";
 
     const processToken = async (token: Handle) => {
-        const titleElement = await token.$(".display-name");
+        await token.click();
+
+        const titleElement = await page.$(".token-title");
         const title = await titleElement?.evaluate((el) => el.textContent);
 
-        const valueElement = await token.$(".token-value-container");
-        await valueElement?.click();
-        const resolvedValueElement = await page.$(
+        const valueElement = await page.$(
             "token-value-resolutions-item .resolution-text",
         );
-        const value = await resolvedValueElement?.evaluate(
-            (el) => el.textContent,
-        );
+        const value = await valueElement?.evaluate((el) => el.textContent);
 
         result += `<li>${title}: ${value}</li>`;
 
@@ -43,7 +41,9 @@ const replaceSpecTable = async (page: Page, table: Handle) => {
         result += "<ul>";
 
         const list = await group.$("token-list");
-        const tokens = await list?.$$("token");
+        const tokens = await list?.$$(
+            ".token-value-container:not(:has(.token-value-container))",
+        );
         for (const token of tokens ?? []) await processToken(token);
 
         result += "</ul>";
