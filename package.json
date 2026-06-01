@@ -16,21 +16,21 @@
         "@cfworker/json-schema": "^4.1.1",
         "@cloudflare/playwright": "^1.3.0",
         "@modelcontextprotocol/server": "2.0.0-alpha.2",
-        "hono": "^4.12.16",
-        "zod": "^4.4.1"
+        "hono": "^4.12.23",
+        "zod": "^4.4.3"
     },
     "devDependencies": {
-        "@eslint/compat": "^2.0.5",
+        "@eslint/compat": "^2.1.0",
         "@eslint/js": "^10.0.1",
-        "@types/node": "^25.6.0",
-        "eslint": "^10.2.1",
+        "@types/node": "^25.9.1",
+        "eslint": "^10.4.1",
         "eslint-config-prettier": "^10.1.8",
         "eslint-plugin-perfectionist": "^5.9.0",
-        "globals": "^17.5.0",
+        "globals": "^17.6.0",
         "prettier": "^3.8.3",
         "typescript": "^6.0.3",
-        "typescript-eslint": "^8.59.1",
-        "wrangler": "^4.87.0"
+        "typescript-eslint": "^8.60.0",
+        "wrangler": "^4.95.0"
     },
     "type": "module",
     "packageManager": "pnpm@11.0.0-rc.5+sha512.c469fb6aa13a99e57aec935cd7b86ff422701f4602ecac2231d3dc20910586ebfb6b50a7b455d0778ec22ae56912d8d8e88e9f9e0a03c0875a6a41783a94a1bd"
