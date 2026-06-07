@@ -17,6 +17,7 @@
         ];
 
         shellHook = ''
+          export NODE_EXTRA_CA_CERTS="${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
           export SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt
         '';
       };
