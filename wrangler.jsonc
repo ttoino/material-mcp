@@ -1,8 +1,8 @@
 {
-    "$schema": "./node_modules/wrangler/config-schema.json",
+    "$schema": "node_modules/wrangler/config-schema.json",
     "name": "material-mcp",
     "main": "src/index.ts",
-    "compatibility_date": "2026-04-24",
+    "compatibility_date": "2026-05-24",
     "compatibility_flags": ["nodejs_compat"],
     "browser": {
         "binding": "BROWSER",
@@ -22,5 +22,11 @@
     "preview_urls": true,
     "observability": {
         "enabled": true,
+        "logs": {
+            "enabled": true,
+        },
+        "traces": {
+            "enabled": true,
+        },
     },
 }

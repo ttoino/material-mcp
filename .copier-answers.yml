@@ -1,0 +1,8 @@
+# Changes here will be overwritten by Copier
+_commit: fe854bc
+_src_path: gh:ttoino/templates
+description: Cloudflare Worker MCP server for Material Design 3 docs
+name: material-mcp
+tests: false
+type: worker
+
