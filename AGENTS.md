@@ -4,7 +4,7 @@
 
 Cloudflare Worker that exposes an MCP server (and REST endpoints) for navigating Material Design 3 docs (`m3.material.io`).
 
-**Type**: worker
+**Type**: Cloudflare Worker (Hono)
 **Runtime**: Cloudflare Workers
 **Package Manager**: pnpm 11.2.2
 
@@ -26,10 +26,12 @@ nix develop
 
 - `pnpm dev`: `wrangler dev` — local dev server
 - `pnpm check`: `tsc --noEmit` — typecheck
+- `pnpm build`: `tsc` — TypeScript build
 - `pnpm lint`: ESLint
 - `pnpm lint:fix`: ESLint with auto-fix
 - `pnpm format`: Prettier check
 - `pnpm format:fix`: Prettier write
+- `pnpm gen`: `pnpm run gen:cf-types`
 - `pnpm gen:cf-types`: Regenerate worker types from `wrangler.jsonc`
 - `pnpm deploy`: Wrangler deploy
 
@@ -40,12 +42,12 @@ GitHub Actions runs independent jobs on PRs/pushes to `main`:
 1. `format` — Prettier formatting
 2. `lint` — ESLint with TypeScript and Perfectionist
 3. `typecheck` — `tsc --noEmit` (requires `gen:cf-types` first)
+4. `build` — TypeScript build
 
 All jobs use `pnpm install --frozen-lockfile`.
 
 ## Architecture Notes
 
-- **Adapter**: `@sveltejs/adapter-cloudflare`
 - **Entry**: `wrangler.jsonc` configures the Worker
 - **Router**: Hono (`src/app.ts`)
 - **Entry**: `src/index.ts` exports the Hono app
@@ -81,7 +83,7 @@ Both have `"remote": true` — `pnpm dev` hits real Cloudflare services, not loc
 
 **Prettier**: 4-space indentation, double quotes, trailing commas. YAML uses 2-space tabs.
 
-**ESLint**: TypeScript strict mode, plus Perfectionist for alphabetical sorting of imports/exports/objects.
+**ESLint**: TypeScript strict mode plus Perfectionist for alphabetical sorting of imports/exports/objects.
 
 **Imports**: Alphabetical order within groups. Use `// @sort` comments to partition sorting.
 
